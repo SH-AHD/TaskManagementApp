@@ -1,0 +1,43 @@
+name: taskati
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  date_picker_timeline: ^1.2.7
+  flutter:
+    sdk: flutter
+  flutter_svg: ^2.2.3
+  gap: ^3.0.1
+  image_picker: ^1.2.1
+  intl: ^0.20.2
+  lottie: ^3.3.2
+  percent_indicator: ^4.2.5
+  shared_preferences: ^2.5.4
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/lottie/
+    - assets/imgs/
+  fonts:
+    - family: Lexend
+      fonts:
+        - asset: assets/fonts/LexendDeca-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/LexendDeca-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/LexendDeca-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/LexendDeca-Bold.ttf
+          weight: 700
