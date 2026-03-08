@@ -1,0 +1,44 @@
+
+class TaskModel {
+String? id;
+String? title;
+String? description;
+String? date;
+String? startTime;
+String? endTime;
+bool isCompleted;
+
+TaskModel({
+this.id,
+this.title,
+this.description,
+this.date,
+this.startTime,
+this.endTime,
+this.isCompleted=false
+});
+
+TaskModel copyWith(
+  {
+    String? id,
+String? title,
+String? description,
+String? date,
+String? startTime,
+String? endTime,
+bool? isCompleted,
+  }
+){
+return TaskModel(
+title: title?? this.title,
+description: description??this.description,
+date: date??this.date,
+startTime: startTime??this.startTime,
+endTime: endTime?? this.endTime,
+isCompleted: isCompleted?? this.isCompleted,
+);
+
+}
+
+
+}

@@ -1,101 +1,76 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:taskati/core/constants/app_assets.dart';
-import 'package:taskati/core/constants/app_colors.dart';
-import 'package:taskati/core/styles/text_styles.dart';
-import 'package:taskati/core/widgets/svg_pic.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:taskati/core/helpers/navigation.dart';
+import 'package:taskati/core/models/task_model.dart';
+import 'package:taskati/core/services/hive_helper.dart';
+import 'package:taskati/features/add_edit_task/screens/add_edit_task_screen.dart';
+import 'package:taskati/features/home/widgets/task_card.dart';
 
 class TasksListView extends StatelessWidget {
-  const TasksListView({
-    super.key,
-  });
-
+  const TasksListView({super.key, required this.tasks});
+  final List<TaskModel> tasks;
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
-        return Container(
-          padding: const EdgeInsets.all(7),
-          height: 100,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: AppColors.whiteColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 32,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Title of the Task",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyles.font14MediumPrimary.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.blackColor,
-                ),
-              ),
-              Gap(3),
-              Text(
-                "Discription of the Task ",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyles.font12RegularSecondary.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Gap(6),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      SvgPic(path: AppAssets.clockSvg, w: 20),
-                      Gap(4),
-                      Text(
-                        "10 PM - 12 AM",
-                        style: TextStyles.font11RegularSecondary,
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: (){
+        TaskModel task = tasks[index];
+        return Slidable(
+          key:UniqueKey(),
+          
+            startActionPane: ActionPane(
+     motion: const ScrollMotion(),
+
     
-                    },
-                    child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 3),
-                      decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                        color: AppColors.accentColor,
-                      
-                      ),
-                          child: Text(
-                        "In Progress",
-                        style: TextStyles.font12RegularSecondary
-                            .copyWith(
-                              color: AppColors.primaryColor,
-                            ),
-                      ),
-                     
-                    ),
-                  ),
-                ],
-              ),
-         
-         
-            ],
-          ),
+    dismissible: DismissiblePane(
+      onDismissed: () {
+HiveHelper.deleteTask(task.id??"");
+    }),
+
+     children:  [
+    SlidableAction(
+        onPressed: (context){
+HiveHelper.deleteTask(task.id??"");
+        },
+        backgroundColor: Color(0xFFFE4A49),
+        foregroundColor: Colors.white,
+        icon: Icons.delete,
+        label: 'Delete',
+      ),
+    ],
+  ),
+
+ endActionPane:  ActionPane(
+    motion: ScrollMotion(),
+    children: [
+      SlidableAction(
+      flex: 2,
+        onPressed: (context){
+          HiveHelper.cacheTask(task.id??"", task.copyWith(isCompleted: true));
+
+        },
+        backgroundColor: Colors.green[300]!,
+        foregroundColor: Colors.white,
+        icon: Icons.check,
+        label: 'Complete',
+      ),
+      SlidableAction(
+        onPressed: (context){
+context.push(AddEditTask(currentTask: task,));
+        },
+        backgroundColor: Colors.yellow[300]!,
+        foregroundColor: Colors.white,
+        icon: Icons.edit,
+        label: 'edit',
+      ),
+    ],
+  ),
+          child: TaskCard(task: task),
         );
       },
       separatorBuilder: (context, index) {
         return SizedBox(height: 10);
       },
-      itemCount: 5,
+      itemCount: tasks.length,
     );
   }
 }

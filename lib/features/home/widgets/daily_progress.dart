@@ -46,8 +46,8 @@ class DailyProgress extends StatelessWidget {
        CircularPercentIndicator(
         radius: 38,
         lineWidth: 8,
-        percent: 0.5,
-        center: Text("50%", style: TextStyles.font14RegularSecondary.copyWith(
+        percent: 1.0,
+        center: Text("100%", style: TextStyles.font14RegularSecondary.copyWith(
           fontWeight: FontWeight.w600,
           color: AppColors.whiteColor,
         ),),

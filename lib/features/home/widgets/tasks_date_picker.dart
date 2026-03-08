@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:taskati/core/constants/app_colors.dart';
 
 class HomeDatePicker extends StatefulWidget {
-  const HomeDatePicker({super.key});
-
+  const HomeDatePicker({super.key, required this.onChange});
+final void Function(DateTime)? onChange;
   @override
   State<HomeDatePicker> createState() => _HomeDatePickerState();
 }
@@ -32,11 +32,7 @@ class _HomeDatePickerState extends State<HomeDatePicker> {
         selectionColor: AppColors.primaryColor,
         selectedTextColor: Colors.white,
          controller: _controller,
-        onDateChange: (date) {
-          setState(() {
-            // _selectedValue = date;
-          });
-        },
+        onDateChange: widget.onChange,
       );
        
   }

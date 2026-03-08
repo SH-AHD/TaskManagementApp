@@ -24,6 +24,16 @@ class AppThemes {
         borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide.none,
       ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius:BorderRadius.circular(15),
+    borderSide: BorderSide(color: AppColors.whiteColor)
+      ),
+
+  focusedBorder: OutlineInputBorder(
+    borderRadius:BorderRadius.circular(15),
+    borderSide: BorderSide(color:AppColors.primaryColor,)
+      ),
+
     ),
   );
 }
