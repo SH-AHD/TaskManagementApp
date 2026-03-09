@@ -1,6 +1,7 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:taskati/core/constants/app_colors.dart';
+import 'package:taskati/core/styles/text_styles.dart';
 
 class HomeDatePicker extends StatefulWidget {
   const HomeDatePicker({super.key, required this.onChange});
@@ -30,6 +31,9 @@ class _HomeDatePickerState extends State<HomeDatePicker> {
         width: 64,
         initialSelectedDate: DateTime.now(),
         selectionColor: AppColors.primaryColor,
+        dateTextStyle: TextStyles.font12Medium,
+        monthTextStyle:  TextStyles.font12Medium,
+        dayTextStyle:  TextStyles.font12Medium,
         selectedTextColor: Colors.white,
          controller: _controller,
         onDateChange: widget.onChange,

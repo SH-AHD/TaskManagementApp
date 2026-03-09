@@ -30,6 +30,7 @@ bool? isCompleted,
   }
 ){
 return TaskModel(
+  id: id??this.id,
 title: title?? this.title,
 description: description??this.description,
 date: date??this.date,

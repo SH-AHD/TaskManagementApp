@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:taskati/core/helpers/navigation.dart';
@@ -23,13 +24,14 @@ class TasksListView extends StatelessWidget {
     
     dismissible: DismissiblePane(
       onDismissed: () {
-HiveHelper.deleteTask(task.id??"");
-    }),
+ HiveHelper.deleteTask(task.id??"");
 
+// log('Box size after delete: ${HiveHelper.tasksBox.length}');
+    }),
      children:  [
     SlidableAction(
         onPressed: (context){
-HiveHelper.deleteTask(task.id??"");
+ HiveHelper.deleteTask(task.id??"");
         },
         backgroundColor: Color(0xFFFE4A49),
         foregroundColor: Colors.white,
@@ -55,7 +57,7 @@ HiveHelper.deleteTask(task.id??"");
       ),
       SlidableAction(
         onPressed: (context){
-context.push(AddEditTask(currentTask: task,));
+context.push(AddEditTaskScreen(currentTask: task,));
         },
         backgroundColor: Colors.yellow[300]!,
         foregroundColor: Colors.white,

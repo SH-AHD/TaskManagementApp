@@ -21,8 +21,9 @@ static List<TaskModel> getCachedTasks(){
 return tasksBox.values.toList();
 }
 
-static Future<void> deleteTask(String key){
- return tasksBox.delete(key);
-}
+  static void deleteTask(String key) {
+    tasksBox.delete(key);
+  }
+
 
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:taskati/core/constants/app_assets.dart';
-import 'package:taskati/core/constants/app_colors.dart';
+import 'package:taskati/core/helpers/theme.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 import 'package:taskati/core/widgets/svg_pic.dart';
 
@@ -20,7 +20,7 @@ final Function() onTap;
       onTap:onTap,
       child: Container(
        decoration: BoxDecoration(
-         color: AppColors.whiteColor,
+         color: context.cardColor,
          borderRadius: BorderRadius.circular(15),
              boxShadow: [
                BoxShadow(
@@ -33,8 +33,8 @@ final Function() onTap;
         child: ListTile(
          leading: SvgPic(path:path),
          title: Text(title, style:TextStyles.font11RegularSecondary ,),
-         subtitle:Text(value, style:TextStyles.font14RegularSecondary.copyWith(color: AppColors.blackColor) ,),
-            trailing: SvgPic(path: AppAssets.arrowDownSvg),
+         subtitle:Text(value, style:TextStyles.font14RegularSecondary.copyWith(color:context.iconColor) ,),
+            trailing: SvgPic(path: AppAssets.arrowDownSvg, color: context.iconColor,),
             
         ),
       ),

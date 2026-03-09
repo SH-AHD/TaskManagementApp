@@ -27,7 +27,9 @@ final VoidCallback onPress;
         )
       ),
       onPressed:onPress,
-     child: Text(text,style: TextStyles.font14MediumPrimary,),
+     child: Text(text,style: TextStyles.font14Medium.copyWith(
+    color: AppColors.primaryColor,
+     ),),
      );
   }
 }

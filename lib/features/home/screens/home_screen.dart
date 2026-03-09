@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/adapters.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,10 +23,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateTime selectedDate = DateTime.now();
   String name = '';
   String img = '';
-  int _currentIndex=0;
-  DateTime selectedDate=DateTime.now();
+  int _currentIndex = 0;
+  // DateTime selectedDate = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -48,125 +48,110 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              Header(img: img, name: name),
-              Gap(23),
-              DailyProgress(),
-              Gap(29),
-              HomeDatePicker(onChange: (date) {
-          setState(() {
-           selectedDate = date;
-          });
-        },),
-              Gap(23),
-             Expanded(
-      child: DefaultTabController(
-        length: 3,
-        child: Column(
-          children: [
-            TabBar(
-              physics: const NeverScrollableScrollPhysics(),
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+          child: DefaultTabController(
+            length: 3,
+            child: Column(
+              children: [
+                Header(),
+                Gap(23),
+                DailyProgress(),
+                Gap(29),
+                HomeDatePicker(
+                  onChange: (date) {
+                    setState(() {
+                      selectedDate = date;
+                    });
+                  },
+                ),
+                Gap(23),
+                TabBar(
+                  indicator: BoxDecoration(),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  indicatorWeight: 0.01,
+                  physics: const NeverScrollableScrollPhysics(),
+                  onTap: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                  tabs: [
+                    StatusTab(isSelected: _currentIndex == 0, title: "All"),
+                    StatusTab(
+                      isSelected: _currentIndex == 1,
+                      title: "In Progress",
+                    ),
+                    StatusTab(
+                      isSelected: _currentIndex == 2,
+                      title: "Completed",
+                    ),
+                  ],
+                ),
+                Gap(12),
+                Expanded(
+                  child: ValueListenableBuilder<Box<TaskModel>>(
+                    valueListenable: HiveHelper.tasksBox.listenable(),
+                    builder: (context, box, child) {
+                      List<TaskModel> dailyTasks = [];
+                      List<TaskModel> inProgressTasks = [];
+                      List<TaskModel> completedTasks = [];
+                      var formattedDate = DateFormat(
+                        "dd MMM, yyyy",
+                      ).format(selectedDate);
 
-              dividerColor: Colors.transparent,
-              dividerHeight: 0,
-              indicatorWeight: 0,
-              indicator: BoxDecoration(),
-              indicatorSize: TabBarIndicatorSize.tab,
-              unselectedLabelColor: AppColors.primaryColor,
-              labelStyle: TextStyles.font14RegularSecondary.copyWith(
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w600,
-              ),
-              labelPadding: const EdgeInsets.symmetric(horizontal: 5),
+                      for (var task in box.values) {
+                        if (task.date == formattedDate) {
+                          dailyTasks.add(task);
+                          if (task.isCompleted) {
+                            completedTasks.add(task);
+                          } else {
+                            inProgressTasks.add(task);
+                          }
+                        }
+                      }
+                      return TabBarView(
+                        key: ValueKey('${formattedDate}_${box.length}'),
 
-              tabs: [
-                StatusTab(isSelected: _currentIndex == 0, title: "All"),
-                StatusTab(isSelected: _currentIndex == 1, title: "In Progress"),
-                StatusTab(isSelected: _currentIndex == 2, title: "Completed"),
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
+                          _buildTaskPage(
+                            dailyTasks,
+                            "No tasks added yet!",
+                            'all_${dailyTasks.length}',
+                          ),
+                          _buildTaskPage(
+                            inProgressTasks,
+                            "No tasks in progress!",
+                            'prog_${inProgressTasks.length}',
+                          ),
+                          _buildTaskPage(
+                            completedTasks,
+                            "No tasks completed yet!",
+                            'done_${completedTasks.length}',
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
-            Gap(20),
-            Expanded(
-              child: ValueListenableBuilder<Box<TaskModel>>(
-                valueListenable: HiveHelper.tasksBox.listenable(),
-                builder: (context, box, child) {
-                  List<TaskModel> dailyTasks = [];
-                  List<TaskModel> inProgressTasks = [];
-                  List<TaskModel> completedTasks = [];
-                  var formattedDate = DateFormat(
-                    "dd MMM, yyyy",
-                  ).format(selectedDate);
-                  for (var task in box.values) {
-                    if (task.date == formattedDate) {
-                      dailyTasks.add(task);
-                      if (task.isCompleted) {
-                        completedTasks.add(task);
-                      } else {
-                        inProgressTasks.add(task);
-                      }
-                    }
-                  }
-
-                  return TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      dailyTasks.isEmpty
-                          ? Center(
-                              child: Text(
-                                "No tasks added yet!",
-                                style: TextStyles.font19SemiboldBlack,
-                              ),
-                            )
-                          : TasksListView(
-                            key: ValueKey('all_${dailyTasks.length}'),
-                            tasks: dailyTasks),
-                      inProgressTasks.isEmpty
-                          ? Center(
-                              child: Text(
-                                "No tasks in progress!",
-                                style: TextStyles.font19SemiboldBlack,
-                              ),
-                            )
-                          : TasksListView(
-                            key: ValueKey('progress_${inProgressTasks.length}'),
-                            tasks: inProgressTasks),
-                      completedTasks.isEmpty
-                          ? Center(
-                              child: Text(
-                                "No tasks have been completed yet!",
-                                maxLines: 2,
-                                style: TextStyles.font19SemiboldBlack.copyWith(fontSize: 17),
-                              ),
-                            )
-                          : TasksListView(
-                            key: ValueKey('done_${completedTasks.length}'),
-                            tasks: completedTasks),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    )
-            ],
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(AddEditTask());
+          context.push(AddEditTaskScreen());
         },
         backgroundColor: AppColors.primaryColor,
         child: Icon(Icons.add, color: AppColors.whiteColor),
       ),
     );
   }
+}
+
+Widget _buildTaskPage(List<TaskModel> tasks, String emptyMsg, String listKey) {
+  if (tasks.isEmpty) {
+    return Center(child: Text(emptyMsg, style: TextStyles.font19Semibold));
+  }
+  return TasksListView(key: ValueKey(listKey), tasks: tasks);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:taskati/core/constants/app_assets.dart';
 import 'package:taskati/core/constants/app_colors.dart';
+import 'package:taskati/core/helpers/theme.dart';
 import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 import 'package:taskati/core/widgets/svg_pic.dart';
@@ -17,11 +18,11 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(7),
-      height: 100,
+      padding: const EdgeInsets.all(12),
+      height: 120,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: AppColors.whiteColor,
+        color:context.cardColor,
         boxShadow: [
           BoxShadow(
             color: Colors.black12,
@@ -34,21 +35,23 @@ class TaskCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            task.title??"Untitled",
+            task.title??"",
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: TextStyles.font14MediumPrimary.copyWith(
+            style: TextStyles.font14Medium.copyWith(
               fontWeight: FontWeight.w600,
-              color: AppColors.blackColor,
+          
             ),
           ),
           Gap(3),
-          Text(
-            task.description??"No Description",
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyles.font12RegularSecondary.copyWith(
-              fontWeight: FontWeight.w500,
+          Expanded(
+            child: Text(
+              task.description??"",
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyles.font12RegularSecondary.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           Gap(6),

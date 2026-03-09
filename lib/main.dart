@@ -24,33 +24,37 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppThemes.lightTheme(),
-      builder:(context, child) {
-        return SafeArea(
-          top: false,
-          bottom: Platform.isAndroid,
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: BoxDecoration(
-                color: AppColors.whiteColor,
-
+    return ValueListenableBuilder<bool>(
+      valueListenable: SharedPref.isDarkModeNotifier,
+      builder: (context, isDark, child) {
+     return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: isDark?AppThemes.darkTheme():AppThemes.lightTheme(),
+        builder:(context, child) {
+          return SafeArea(
+            top: false,
+            bottom: Platform.isAndroid,
+            child: Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                  color: isDark?AppColors.blackColor:AppColors.whiteColor,
+                  ),
                 ),
-              ),
-              Image.asset(AppAssets.bg,
-               width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,),
-              child!,
-            ],
-          ),
-        );
-      },
-      home: const SplashScreen(),
+                Image.asset(AppAssets.bg,
+                 width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,),
+                child!,
+              ],
+            ),
+          );
+        },
+        home: const SplashScreen(),
+      );},
+
     );
   }
 }

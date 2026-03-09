@@ -15,12 +15,12 @@ class StatusTab extends StatelessWidget {
         height: 40,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: isSelected ? AppColors.primaryColor : AppColors.accentColor,
+          color: isSelected ? AppColors.primaryColor :Theme.of(context).colorScheme.tertiaryContainer,
         ),
         child: Center(
           child: Text(
             title,
-            style: TextStyles.font14MediumPrimary.copyWith(
+            style: TextStyles.font14Medium.copyWith(
               color: isSelected ? AppColors.whiteColor : AppColors.primaryColor,
             ),
           ),

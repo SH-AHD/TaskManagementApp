@@ -5,7 +5,7 @@ import 'package:taskati/core/constants/app_assets.dart';
 import 'package:taskati/core/helpers/navigation.dart';
 import 'package:taskati/core/services/shared_pref.dart';
 import 'package:taskati/core/styles/text_styles.dart';
-import 'package:taskati/features/complete_profile/screens/complete_profile_screen.dart';
+import 'package:taskati/features/complete_profile/screens/complete_and_edit_profile_screen.dart';
 import 'package:taskati/features/home/screens/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
    }else{
     if (mounted) {
-   context.pushReplacement(const CompleteProfileScreen());
+   context.pushReplacement( CompleteAndEditProfileScreen());
     }
    }
 
@@ -47,7 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Lottie.asset(AppAssets.logoJson, width: 250),
               Gap(12),
-            Text("Taskati", style: TextStyles.font24SemiboldBlack,),
+            Text("Taskati", style: TextStyles.font24Semibold,),
             Gap(18),
             Text("It’s time to get organized", style: TextStyles.font14RegularSecondary,),
           

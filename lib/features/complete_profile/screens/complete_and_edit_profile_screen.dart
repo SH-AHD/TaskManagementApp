@@ -15,20 +15,37 @@ import 'package:taskati/core/widgets/svg_pic.dart';
 import 'package:taskati/core/widgets/tab_button.dart';
 import 'package:taskati/features/home/screens/home_screen.dart';
 
-class CompleteProfileScreen extends StatefulWidget {
-  const CompleteProfileScreen({super.key});
-
+class CompleteAndEditProfileScreen extends StatefulWidget {
+  CompleteAndEditProfileScreen({super.key, this.name, this.path});
+  String? name;
+  String? path;
   @override
-  State<CompleteProfileScreen> createState() => _CompleteProfileScreenState();
+  State<CompleteAndEditProfileScreen> createState() =>
+      _CompleteAndEditProfileScreenState();
 }
 
-class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
+class _CompleteAndEditProfileScreenState
+    extends State<CompleteAndEditProfileScreen> {
   String? path;
   TextEditingController nameController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.name != null) {
+      nameController.text = widget.name!;
+      path = widget.path;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Complete Your Profile")),
+      appBar: AppBar(
+        title: widget.name != null
+            ? Text("Profile")
+            : Text("Complete Your Profile"),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
@@ -48,11 +65,12 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   CircleAvatar(
                     radius: 72,
                     backgroundColor: AppColors.iconBgColor,
-                    backgroundImage: path != null
-                        ? FileImage(File(path!))
-                        : AssetImage(AppAssets.user),
-                  ),
-                  if (path != null)
+                    backgroundImage:
+                   (path!=null&& path!.isNotEmpty && File(path!).existsSync())
+      ? FileImage(File(path!))
+                    : const AssetImage(AppAssets.user) as ImageProvider,
+               ),
+                  if (path!=null&& path!.isNotEmpty && File(path!).existsSync())
                     Positioned(
                       right: 5,
                       bottom: 5,
@@ -107,16 +125,28 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(left: 22,right: 22, bottom: 31, top: 10),
+        padding: const EdgeInsets.only(
+          left: 22,
+          right: 22,
+          bottom: 31,
+          top: 10,
+        ),
         child: MainButton(
-          text: "Let's Start !",
-          onPress: () async{
+          text:  widget.name != null?"Save":"Let's Start !",
+          onPress: () async {
             if (nameController.text.isNotEmpty) {
-              await SharedPref.setUsrinfo(nameValue: nameController.text, imgValue: path??"");
-              await SharedPref.setBool(SharedPref.isCompleteprofile,true);
-              context.push(HomeScreen());
+              await SharedPref.setUsrinfo(
+                nameValue: nameController.text,
+                imgValue: path ?? "",
+              );
+              await SharedPref.setBool(SharedPref.isCompleteprofile, true);
+              if (widget.name != null) {
+                context.pop();
+              } else {
+                context.push(HomeScreen());
+              }
             } else {
-            showErrorSnackBar(context,  "Enter Your Name");
+              showErrorSnackBar(context, "Enter Your Name");
             }
           },
         ),

@@ -30,7 +30,7 @@ final VoidCallback onPress;
         ),
       ),
       onPressed: onPress,
-     child: Text(text,style: TextStyles.font19SemiboldBlack.copyWith(color: AppColors.whiteColor),),
+     child: Text(text,style: TextStyles.font19Semibold.copyWith(color: AppColors.whiteColor),),
      );
   }
 }

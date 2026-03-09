@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:taskati/core/constants/app_assets.dart';
 import 'package:taskati/core/helpers/navigation.dart';
+import 'package:taskati/core/helpers/theme.dart';
 import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/services/hive_helper.dart';
 import 'package:taskati/core/styles/text_styles.dart';
@@ -11,14 +12,14 @@ import 'package:taskati/core/widgets/main_button.dart';
 import 'package:taskati/core/widgets/svg_pic.dart';
 import 'package:taskati/features/add_edit_task/widgets/date_time_picker.dart';
 
-class AddEditTask extends StatefulWidget {
-  const AddEditTask({super.key, this.currentTask});
+class AddEditTaskScreen extends StatefulWidget {
+  const AddEditTaskScreen({super.key, this.currentTask});
   final TaskModel? currentTask;
   @override
-  State<AddEditTask> createState() => _AddEditTaskState();
+  State<AddEditTaskScreen> createState() => _AddEditTaskScreenState();
 }
 
-class _AddEditTaskState extends State<AddEditTask> {
+class _AddEditTaskScreenState extends State<AddEditTaskScreen> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   String dateVaule = DateFormat("dd MMM, yyyy").format(DateTime.now());
@@ -56,7 +57,10 @@ class _AddEditTaskState extends State<AddEditTask> {
             onPressed: () {
               context.pop();
             },
-            icon: SvgPic(path: AppAssets.arrowleftSvg),
+            icon: SvgPic(
+              path: AppAssets.arrowleftSvg,
+              color: context.iconColor,
+            ),
           ),
           title: Text(widget.currentTask != null ? "Edit Task" : "Add Task"),
         ),
@@ -125,23 +129,30 @@ class _AddEditTaskState extends State<AddEditTask> {
                   widget.currentTask!.id ?? "",
                   TaskModel(
                     id: widget.currentTask!.id,
-                    title: titleController.text,
-                    description: descriptionController.text,
+                    title: titleController.text.isEmpty
+                        ? "Untitled"
+                        : titleController.text,
+                    description: descriptionController.text.isEmpty
+                        ? "No Description"
+                        : descriptionController.text,
                     date: dateVaule,
                     startTime: startTimeValue,
                     endTime: endTimeValue,
                     isCompleted: false,
                   ),
                 );
-             
               } else {
                 String key = DateTime.now().microsecondsSinceEpoch.toString();
                 HiveHelper.cacheTask(
                   key,
                   TaskModel(
                     id: key,
-                    title: titleController.text,
-                    description: descriptionController.text,
+                    title: titleController.text.isEmpty
+                        ? "Untitled"
+                        : titleController.text,
+                    description: descriptionController.text.isEmpty
+                        ? "No Description"
+                        : descriptionController.text,
                     date: dateVaule,
                     startTime: startTimeValue,
                     endTime: endTimeValue,
@@ -149,7 +160,7 @@ class _AddEditTaskState extends State<AddEditTask> {
                   ),
                 );
               }
-                context.pop();
+              context.pop();
             },
           ),
         ),
